@@ -1,6 +1,6 @@
 services:
   html-report-server:
-    build: .
+    image: ghcr.io/19-mrx-98/report-server:latest:latest
     container_name: reportserver-alpha
     pid: "host"                           # Host-/proc sichtbar
     volumes:

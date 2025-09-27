@@ -1,4 +1,4 @@
-# Static Mountpoint Viewer
+# Static Reportserver
 
 Ein einfaches Tool zur Anzeige und Verwaltung von statischen Mountpoints.
 
@@ -12,8 +12,10 @@ Ein einfaches Tool zur Anzeige und Verwaltung von statischen Mountpoints.
 
 ```bash
 cd /var
-git clone https://github.com/dein-benutzer/static-mountpoint-viewer.git
-cd static-mountpoint-viewer
+git clone 
+cd docker-report-server
+mv docker-compose.yml docker-compose-build.yml
+mv docker-compose-no-build.yml docker-compose.yml
 docker compose up -d
 ```
 

@@ -11,6 +11,7 @@ Ein einfaches Tool zur Anzeige und Verwaltung von statischen Mountpoints.
 ## Installation
 
 ```bash
+cd /var
 git clone https://github.com/dein-benutzer/static-mountpoint-viewer.git
 cd static-mountpoint-viewer
 docker compose up -d

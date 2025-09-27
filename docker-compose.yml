@@ -1,0 +1,12 @@
+services:
+  mounts-html:
+    build: .
+    container_name: reportserver-alpha
+    pid: "host"                           # Host-/proc sichtbar
+    volumes:
+      - /var/static-mountpoint-viewer/output:/data   # Host-Verzeichnis → Container
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    ports:
+      - "8080:8080"                       # Port 8080 des Containers → Port 8080 des Hos
+    #command: ["-o", "/data/mounts.html"]
+    # read_only: true  # ← NICHT setzen, sonst kann er /data nicht beschreiben

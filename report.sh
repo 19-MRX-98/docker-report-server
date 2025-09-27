@@ -4,6 +4,7 @@ set -euo pipefail
 OUT_DIR="/data"
 mkdir -p "$OUT_DIR"
 
+# ---- HTML Template ----
 html_wrap() {
   local title="$1"
   local body="$2"
@@ -29,6 +30,7 @@ html_wrap() {
 EOF
 }
 
+# ---- Mountpoints Report (HTML + JSON) ----
 report_mounts() {
   local rows=""
   while read -r line; do
@@ -52,8 +54,16 @@ report_mounts() {
   </div>"
 
   html_wrap "Mountpoints Report" "$body" > "$OUT_DIR/mounts.html"
+
+  # JSON-Ausgabe
+  df -h --output=source,fstype,size,used,avail,pcent,target | tail -n +2 | \
+    awk 'BEGIN { print "[" } 
+         { printf "%s{\"device\":\"%s\",\"type\":\"%s\",\"size\":\"%s\",\"used\":\"%s\",\"avail\":\"%s\",\"usep\":\"%s\",\"mount\":\"%s\"}", 
+                sep, $1, $2, $3, $4, $5, $6, $7; sep="," } 
+         END { print "]" }' > "$OUT_DIR/mounts.json"
 }
 
+# ---- Logs Report (HTML + JSON) ----
 report_logs() {
   local containers
   containers=$(docker ps --format '{{.Names}}' | grep -v 'report-server' || true)
@@ -61,12 +71,24 @@ report_logs() {
   local tabs=""
   local content=""
 
+  echo "[" > "$OUT_DIR/logs.json"
+  local sep=""
+
   for c in $containers; do
     [ -z "$c" ] && continue
     logs=$(docker logs --tail 50 "$c" 2>&1 | sed 's/&/\&amp;/g; s/</\&lt;/g; s/>/\&gt;/g')
+
+    # HTML
     tabs+="<li class=\"nav-item\"><a class=\"nav-link\" data-bs-toggle=\"tab\" href=\"#$c\">$c</a></li>"
     content+="<div class=\"tab-pane fade\" id=\"$c\"><pre class=\"small bg-dark text-white p-2\" style=\"max-height:400px;overflow:auto;\">$logs</pre></div>"
+
+    # JSON (roh, Logs als String)
+    raw_logs=$(docker logs --tail 50 "$c" 2>&1 | jq -Rs .)
+    echo "${sep}{\"container\":\"$c\",\"logs\":$raw_logs}" >> "$OUT_DIR/logs.json"
+    sep=","
   done
+
+  echo "]" >> "$OUT_DIR/logs.json"
 
   if [ -z "$tabs" ]; then
     content="<p class='text-muted'>Keine weiteren Container gefunden.</p>"
@@ -77,6 +99,7 @@ report_logs() {
   html_wrap "Container Logs Report" "$content" > "$OUT_DIR/logs.html"
 }
 
+# ---- Index Page ----
 report_index() {
   local body="
   <div class=\"row g-4\">
@@ -85,7 +108,8 @@ report_index() {
         <div class=\"card-body\">
           <h5 class=\"card-title\">Mountpoints</h5>
           <p class=\"card-text\">Übersicht über Dateisysteme und deren Auslastung.</p>
-          <a href=\"mounts.html\" class=\"btn btn-primary\">Anzeigen</a>
+          <a href=\"mounts.html\" class=\"btn btn-primary\">HTML</a>
+          <a href=\"mounts.json\" class=\"btn btn-secondary\">JSON</a>
         </div>
       </div>
     </div>
@@ -94,7 +118,8 @@ report_index() {
         <div class=\"card-body\">
           <h5 class=\"card-title\">Container Logs</h5>
           <p class=\"card-text\">Letzte Logzeilen aller laufenden Container.</p>
-          <a href=\"logs.html\" class=\"btn btn-primary\">Anzeigen</a>
+          <a href=\"logs.html\" class=\"btn btn-primary\">HTML</a>
+          <a href=\"logs.json\" class=\"btn btn-secondary\">JSON</a>
         </div>
       </div>
     </div>
@@ -109,5 +134,5 @@ while true; do
   report_logs
   report_index
   echo "Reports refreshed at $(date -u)"
-  sleep 300
+  sleep 300   # 5 Minuten
 done

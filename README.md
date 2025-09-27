@@ -7,6 +7,7 @@ Ein einfaches Tool zur Anzeige und Verwaltung von statischen Mountpoints.
 - Übersichtliche Darstellung von Mountpoints
 - Ausgabe der Informationen in einer Datei
 - Unterstützung verschiedener Dateisysteme
+- Einfache API für Drittsysteme
 
 ## Installation
 

@@ -19,11 +19,24 @@ server {
     listen 8080;
     server_name localhost;
 
+    # HTML-Reports (Default)
     root /data;
     index index.html;
 
     location / {
         autoindex on;
+        try_files $uri $uri/ =404;
+    }
+
+    # API Endpoints → geben JSON zurück
+    location /api/mounts {
+        alias /data/mounts.json;
+        default_type application/json;
+    }
+
+    location /api/logs {
+        alias /data/logs.json;
+        default_type application/json;
     }
 }
 EOF

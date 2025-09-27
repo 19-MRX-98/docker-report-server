@@ -109,7 +109,6 @@ report_index() {
           <h5 class=\"card-title\">Mountpoints</h5>
           <p class=\"card-text\">Übersicht über Dateisysteme und deren Auslastung.</p>
           <a href=\"mounts.html\" class=\"btn btn-primary\">HTML</a>
-          <a href=\"mounts.json\" class=\"btn btn-secondary\">JSON</a>
         </div>
       </div>
     </div>
@@ -119,7 +118,16 @@ report_index() {
           <h5 class=\"card-title\">Container Logs</h5>
           <p class=\"card-text\">Letzte Logzeilen aller laufenden Container.</p>
           <a href=\"logs.html\" class=\"btn btn-primary\">HTML</a>
-          <a href=\"logs.json\" class=\"btn btn-secondary\">JSON</a>
+        </div>
+      </div>
+    </div>
+    <div class=\"col-md-6\">
+      <div class=\"card shadow-sm h-100\">
+        <div class=\"card-body\">
+          <h5 class=\"card-title\">API Endpoints</h5>
+          <p class=\"card-text\">Anzeige der API</p>
+          <a href=\"mounts.json\" class=\"btn btn-primary\">Mounts</a>
+          <a href=\"logs.json\" class=\"btn btn-secondary\">Container Logs</a>
         </div>
       </div>
     </div>

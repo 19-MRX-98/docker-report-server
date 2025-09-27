@@ -3,7 +3,7 @@ FROM alpine:3.20
 ENV TZ="Europe/Berlin"
 
 # Tools: Bash, Coreutils, Docker-CLI für Logs, Nginx als Webserver
-RUN apk add --no-cache bash coreutils tzdata docker-cli nginx
+RUN apk add --no-cache bash coreutils tzdata docker-cli nginx jq
 
 WORKDIR /app
 COPY report.sh /app/report.sh

@@ -131,6 +131,15 @@ report_index() {
         </div>
       </div>
     </div>
+    <div class=\"col-md-6\">
+      <div class=\"card shadow-sm h-100\">
+        <div class=\"card-body\">
+          <h5 class=\"card-title\">API Hilfe</h5>
+          <p class=\"card-text\">Hilfe zur API</p>
+          <a href=\"api-docs.html\" class=\"btn btn-secondary\">API Beispiel</a>
+        </div>
+      </div>
+    </div>
   </div>"
 
   html_wrap "Reportserver Index" "$body" > "$OUT_DIR/index.html"
